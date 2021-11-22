@@ -1,0 +1,8 @@
+{
+    "name": "projectgroup22",
+    "author": "XcSteven <stevenbui1809@gmail.com>",
+    "publish": false,
+    "dependencies": {
+      "lib": "latest"
+    }
+}
