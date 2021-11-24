@@ -1,16 +1,29 @@
-// authenticates you with the API standard library
-// type `await lib.` to display API autocomplete
 const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});
 
-// you can write whatever javascript you'd like
-// logs are visible from the [? Help] popup on right
-for (let i = 0; i < 10; i++) {
-  console.log(`A log! ${i}`);
-}
-
-// `context` is automatically populated with HTTP request data
-// you can modify `context.params` test data via [Payload] below
-let message = `hello ${context.params.name}`;
-
-// endpoints are executed as functions, click [> Run] below to test
-return message;
+await lib.discord.channels['@0.2.0'].messages.create({
+  "channel_id": `912925692121972768`,
+  "content": `Welcome to our server!`,
+  "tts": false,
+  "embeds": [
+    {
+      "type": "rich",
+      "title": `Rules:`,
+      "description": "",
+      "color": 0xffd000,
+      "fields": [
+        {
+          "name": `Rule #1`,
+          "value": `No curse words (If you curse, you will get a strike; 3 strikes = banned from the server)`
+        },
+        {
+          "name": `Rule #2`,
+          "value": `Be friendly, do not harass others`
+        },
+        {
+          "name": `Rule #3`,
+          "value": `Be active`
+        }
+      ]
+    }
+  ]
+});
