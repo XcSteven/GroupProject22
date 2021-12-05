@@ -2,7 +2,7 @@ const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});
 const ytdl = require('ytdl-core');                                    
 const ytSearch = require('yt-search');                             
 
-let VOICE_CHANNEL = '916900606763991130'; //Our Discord voice channel's ID
+let VOICE_CHANNEL = '908575479064305697';
 let message = context.params.event.content;
 
 if (message.startsWith('!play')) {
