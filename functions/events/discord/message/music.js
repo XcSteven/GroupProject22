@@ -1,15 +1,15 @@
-const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});  //Require library for Autocode
-const ytdl = require('ytdl-core');                                     //Link to YT API
-const ytSearch = require('yt-search');                                 //Youtube search
+const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});  
+const ytdl = require('ytdl-core');                                    
+const ytSearch = require('yt-search');                             
 
 let VOICE_CHANNEL = '916900606763991130'; //Our Discord voice channel's ID
 let message = context.params.event.content;
-//PLAY FUNCTION BY NAME OR YOUTUBE URL LINK
+
 if (message.startsWith('!play')) {
   let searchString = message.split(' ').slice(1).join(' ');
   
   try {
-    let youtubeLink;              //Failed to play song if user provides link from other music sources
+    let youtubeLink;             
     if (!searchString) {
       return lib.discord.channels['@0.2.0'].messages.create({
         channel_id: `${context.params.event.channel_id}`,
@@ -38,34 +38,10 @@ if (message.startsWith('!play')) {
       channel_id: `${context.params.event.channel_id}`,
       content: `Now playing **${downloadInfo.videoDetails.title}**`,
     });
-  } catch (e) {                                                       //CANNOT PLAY TRACK FROM STREAMMING
+  } catch (e) {                                                      
     return lib.discord.channels['@0.2.0'].messages.create({
       channel_id: `${context.params.event.channel_id}`,
       content: `Failed to play track!`,
     });
   }
-} else if (message.startsWith('!stop')) {               //STOP FUNCTION
-  await lib.discord.voice['@0.0.1'].channels.disconnect({
-    guild_id: `${context.params.event.guild_id}`
-  });
-  await lib.discord.channels['@0.2.0'].messages.create({       //The music bot exits the voice channel
-    channel_id: `${context.params.event.channel_id}`,
-    content: `Disconnected from <#${VOICE_CHANNEL}>!`,
-  });
-} else if (message.startsWith('!pause')) {                 //PAUSE 
-  await lib.discord.voice['@0.0.1'].tracks.pause({
-    guild_id: `${context.params.event.guild_id}`
-  });
-  return lib.discord.channels['@0.2.0'].messages.create({
-    channel_id: `${context.params.event.channel_id}`,
-    content: `Paused.`,
-  });
-} else if (message.startsWith('!resume')) {                //RESUME
-  await lib.discord.voice['@0.0.1'].tracks.resume({
-    guild_id: `${context.params.event.guild_id}`
-  });
-  return lib.discord.channels['@0.2.0'].messages.create({
-    channel_id: `${context.params.event.channel_id}`,
-    content: `Resumed.`,
-  });
-}
+} 
