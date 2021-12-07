@@ -55,8 +55,8 @@ if (escapedContent.match(new RegExp(regexString, 'i'))) {
     recipient_id: `${context.params.event.author.id}`,
     content: ` `,
     embed: {
-      title: `You've recieved a strike ` /** you can change the embed title here **/,
-      description: `Hi!, <@${context.params.event.author.id}> You used a toxic word thats why I deleted your message. Recieve more strike and you might get banned.` /** you can change the embed description here **/,
-      color: 0xed0303 /** you can change the embed color here **/,
+      title: `You've recieved a strike`,
+      description: `Hi!, <@${context.params.event.author.id}> You used a toxic word thats why I deleted your message. Recieve more strike and you might get banned.`,
+      color: 0xED0303,
     },
   })};
