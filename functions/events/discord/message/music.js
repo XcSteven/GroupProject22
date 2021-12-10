@@ -60,4 +60,12 @@ if (message.startsWith('!play')) {
     channel_id: `${context.params.event.channel_id}`,
     content: `Resumed.`,
   });
-}
+} else if (message.startsWith('!stop')) {               
+  await lib.discord.voice['@0.0.1'].channels.disconnect({
+    guild_id: `${context.params.event.guild_id}`
+  });
+  await lib.discord.channels['@0.2.0'].messages.create({
+     channel_id: `${context.params.event.channel_id}`,
+     content: `Disconnected from <#${VOICE_CHANNEL}>!`,
+   })
+};
