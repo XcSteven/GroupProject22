@@ -63,9 +63,12 @@ module.exports = async () => {
     result.discord.response = await lib.discord.channels[
       '@0.1.2'
     ].messages.create({
-      channel_id: `912925692121972768`,
+      channel_id: `915825484951064619`,
       content: `Today's event: ${names}`,
     });
   }
   return result;
 };
+
+
+
