@@ -69,6 +69,3 @@ module.exports = async () => {
   }
   return result;
 };
-
-
-
