@@ -10,14 +10,9 @@ module.exports = async () => {
   let date = momentTimezone().tz('Asia/Ho_Chi_Minh');
   let today_day = date.format('D');
   let today_month = date.format('M');
+  let res = result.googlesheets.selectQueryResult;
 
-  console.log(date);
-  console.log(today_day);
-  console.log(today_month);
-
-  result.googlesheets.selectQueryResult = await lib.googlesheets.query[
-    '@0.3.0'
-  ].select({
+  res = await lib.googlesheets.query['@0.3.0'].select ({
     range: `A:C`,
     bounds: 'FIRST_EMPTY_ROW',
     where: [
@@ -31,39 +26,20 @@ module.exports = async () => {
       offset: 0,
     },
   });
-  console.log(result.googlesheets.selectQueryResult);
-  if (result.googlesheets.selectQueryResult.rows.length != 0) {
+  if (res.rows.length != 0) {
     let names;
-    for (
-      let i = 0;
-      i < result.googlesheets.selectQueryResult.rows.length;
-      i++
-    ) {
+    for (let i = 0; i < res.rows.length; i++) {
       if (i == 0) {
-        names = result.googlesheets.selectQueryResult.rows[i].fields['Name'];
-        console.log(names);
-      } else if (
-        i > 0 &&
-        i < result.googlesheets.selectQueryResult.rows.length - 1
-      ) {
-        names =
-          names +
-          ', ' +
-          result.googlesheets.selectQueryResult.rows[i].fields['Name'];
-        console.log(names);
+        names = res.rows[i].fields['Name'];
+      } else if (i > 0 && i < res.rows.length - 1) {
+        names = names + ', ' + res.rows[i].fields['Name'];
       } else {
-        names =
-          names +
-          ', and ' +
-          result.googlesheets.selectQueryResult.rows[i].fields['Name'];
-        console.log(names);
+        names = names + ', and ' + res.rows[i].fields['Name'];
       }
     }
 
-    result.discord.response = await lib.discord.channels[
-      '@0.1.2'
-    ].messages.create({
-      channel_id: `915825484951064619`,
+    result.discord.response = await lib.discord.channels ['@0.1.2'].messages.create ({
+      channel_id: `917985358057193554`,
       content: `Today's event: ${names}`,
     });
   }

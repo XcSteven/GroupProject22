@@ -1,7 +1,9 @@
 const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});
 
-await lib.discord.channels['@0.2.0'].messages.create({
-  channel_id: context.params.event.channel_id,
+let event = context.params.event;
+
+await lib.discord.channels['@0.2.0'].messages.create ({
+  channel_id: event.channel_id,
   content: `Every time you mention me, I will give you the rules and all the commands I can do!`,
   tts: false,
   embeds: [
@@ -13,39 +15,39 @@ await lib.discord.channels['@0.2.0'].messages.create({
       fields: [
         {
           name: `Rule #1`,
-          value: `No curse words (If you curse, you will get a strike; 3 strikes = banned from the server)`
+          value: `No curse words (If you curse, you will get a strike; 3 strikes = banned from the server).`
         },
         {
           name: `Rule #2`,
-          value: `Be friendly, do not harass others`
+          value: 'Be friendly, do not harass others.'
         },
         {
           name: `Rule #3`,
-          value: `Be active`
+          value: `Be active.`
         }
       ]
     }
   ]
 });
 
-await lib.discord.channels['@0.2.0'].messages.create({
-  channel_id: context.params.event.channel_id,
+await lib.discord.channels['@0.2.0'].messages.create ({
+  channel_id: event.channel_id,
   content: '',
   tts: false,
   embeds: [
     {
       type: 'rich',
-      title: 'Commands:',
+      title: `Commands:`,
       description: '',
-      color: 0xCF361F,
+      color: 0xF57842,
       fields: [
         {
           name: `!meme *keyword*`,
-          value: `Find a random meme on the Internet using the keywords provided.`
+          value: `Find a random meme on the Internet using the provided keyword.`
         },
         {
           name: `!memedit`,
-          value: "\u200B"
+          value: `Take a random meme photo and add a caption to the photo using the provided keyword.`
         },
         {
           name: `!play *keyword*`,
@@ -64,24 +66,32 @@ await lib.discord.channels['@0.2.0'].messages.create({
           value: `Stop playing music.`
         },
         {
+          name: `!lyric *keyword*`,
+          value: `Find the lyric of the song with the provided keyword.`
+        },
+        {
           name: `!addnote *note_content*`,
-          value: `Add a note for later use.`
+          value: `Add an own note for later use.`
         },
         {
           name: `!viewnote`,
-          value: `View the saved note.`
+          value: `View own saved note.`
         },
         {
           name: `!deletenote`,
-          value: `Delete the saved note.`
+          value: `Delete own saved note.`
         },
         {
-          name: `!addreminder *reminder_name* *reminder_month* *reminder_day*`,
-          value: "\u200B"
+          name: `!addreminder *reminder_name* *reminder_month(int)* *reminder_day*`,
+          value: `Create a new reminder.`
         },
         {
-          name: `!viewreminder`,
-          value: "\u200B"
+          name: `!deletereminder *reminder_name*`,
+          value: `Delete the reminder with the provided name.`
+        },
+        {
+          name: `!setstatus *keyword*`,
+          value: `Customize the Bot status with the provided keyword.`
         }
       ]
     }

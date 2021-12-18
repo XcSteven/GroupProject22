@@ -1,15 +1,31 @@
 const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});
 
-let userNoteKey = `__${context.params.event.author.id}_note__`;
+let event = context.params.event;
+let identifyKey = `__${event.author.id}_note__`;
 
-if (context.params.event.content.startsWith('!addnote')) {
-  let noteText = context.params.event.content.split(' ').slice(1).join(' ');
+if (event.content.startsWith('!addnote')) {
+  let userNote = event.content.split(' ').slice(1).join(' ');
   await lib.utils.kv['@0.1.16'].set ({
-    key: userNoteKey,
-    value: noteText
+    key: identifyKey,
+    value: userNote
   });
   await lib.discord.channels['@0.1.1'].messages.create ({
-    channel_id: `${context.params.event.channel_id}`,
-    content: `<@${context.params.event.author.id}> noted something!`
+    channel_id: event.channel_id,
+    content: `<@${event.author.id}> noted something!`
   });
+} else if (event.content.startsWith('!viewnote')) {
+  let addedNote = await lib.utils.kv['@0.1.16'].get ({
+    key: identifyKey
+  });
+  if (addedNote) {
+    await lib.discord.channels['@0.1.1'].messages.create ({
+      channel_id: event.channel_id,
+      content: [`<@${event.author.id}>'s note:`, addedNote].join('\n')
+    });
+  } else {
+    await lib.discord.channels['@0.1.1'].messages.create ({
+      channel_id: event.channel_id,
+      content: `No notes found. Add one using !addnote *note_content*.`
+    });
+  }
 }

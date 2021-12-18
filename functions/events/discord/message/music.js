@@ -2,17 +2,17 @@ const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});
 const ytdl = require('ytdl-core');                                    
 const ytSearch = require('yt-search');                             
 
-let VOICE_CHANNEL = '908575479064305697';
-let message = context.params.event.content;
+let voice = '908575479064305697';      
+let event = context.params.event;
 
-if (message.startsWith('!play')) {
-  let searchString = message.split(' ').slice(1).join(' ');
+if (event.content.startsWith('!play')) {
+  let searchString = event.content.split(' ').slice(1).join(' ');
   
   try {
     let youtubeLink;             
     if (!searchString) {
       return lib.discord.channels['@0.2.0'].messages.create ({
-        channel_id: `${context.params.event.channel_id}`,
+        channel_id: event.channel_id,
         content: `No search string provided!`,
       });
     }
@@ -20,7 +20,7 @@ if (message.startsWith('!play')) {
       let results = await ytSearch(searchString);
       if (!results?.all?.length) {
         return lib.discord.channels['@0.2.0'].messages.create ({
-          channel_id: `${context.params.event.channel_id}`,
+          channel_id: event.channel_id,
           content: `No results found for your search string. Please try a different one.`,
         });
       }
@@ -28,44 +28,79 @@ if (message.startsWith('!play')) {
     } else {
       youtubeLink = searchString;
     }
-    let downloadInfo = await ytdl.getInfo(youtubeLink);
+    let info = await ytdl.getInfo(youtubeLink);
     await lib.discord.voice['@0.0.1'].tracks.play ({
-      channel_id: `${VOICE_CHANNEL}`,
-      guild_id: `${context.params.event.guild_id}`,
-      download_info: downloadInfo
+      channel_id: voice,
+      guild_id: event.guild_id,
+      download_info: info
     });
     return lib.discord.channels['@0.2.0'].messages.create ({
-      channel_id: `${context.params.event.channel_id}`,
-      content: `Now playing **${downloadInfo.videoDetails.title}**`,
+      channel_id: event.channel_id,
+      content: `Now playing **${info.videoDetails.title}**`,
     });
   } catch (e) {                                                      
     return lib.discord.channels['@0.2.0'].messages.create ({
-      channel_id: `${context.params.event.channel_id}`,
+      channel_id: event.channel_id,
       content: `Failed to play track!`,
     });
   }
-} else if (message.startsWith('!pause')) {               
-  await lib.discord.voice['@0.0.1'].tracks.pause({
-    guild_id: `${context.params.event.guild_id}`
+} else if (event.content.startsWith('!stop')) {              
+  await lib.discord.voice['@0.0.1'].channels.disconnect ({
+    guild_id: event.guild_id
   });
-  return lib.discord.channels['@0.2.0'].messages.create({
-    channel_id: `${context.params.event.channel_id}`,
+  await lib.discord.channels['@0.2.0'].messages.create ({       
+    channel_id: event.channel_id,
+    content: `Disconnected from <#${voice}>!`,
+  });
+} else if (event.content.startsWith('!pause')) {                
+  await lib.discord.voice['@0.0.1'].tracks.pause ({
+    guild_id: event.guild_id
+  });
+  return lib.discord.channels['@0.2.0'].messages.create ({
+    channel_id: event.channel_id,
     content: `Paused.`,
   });
-} else if (message.startsWith('!resume')) {               
-  await lib.discord.voice['@0.0.1'].tracks.resume({
-    guild_id: `${context.params.event.guild_id}`
+} else if (event.content.startsWith('!resume')) {            
+  await lib.discord.voice['@0.0.1'].tracks.resume ({
+    guild_id: event.guild_id
   });
-  return lib.discord.channels['@0.2.0'].messages.create({
-    channel_id: `${context.params.event.channel_id}`,
+  return lib.discord.channels['@0.2.0'].messages.create ({
+    channel_id: event.channel_id,
     content: `Resumed.`,
   });
-} else if (message.startsWith('!stop')) {               
-  await lib.discord.voice['@0.0.1'].channels.disconnect({
-    guild_id: `${context.params.event.guild_id}`
+} else if (event.content.startsWith('!lyric')) {
+  const name = event.content
+    .split(' ')
+    .slice(1)
+    .join(' ')
+    .trim();
+  if (!name)
+    return lib.discord.channels['@0.1.2'].messages.create ({
+      channel_id: event.channel_id,
+      content: `Please provide the song name!`,
+      message_reference: {
+        message_id: event.id,
+      },
+    });
+
+  const song = await lib.ctks['genius-lyrics']['@1.0.2']({name});
+  if (!song || !song.lyrics)
+    return lib.discord.channels['@0.1.2'].messages.create ({
+      channel_id: event.channel_id,
+      content: `Sorry!, i was unable to find any song with given name.`,
+      message_reference: {
+        message_id: event.id,
+      },
+    });
+
+  await lib.discord.channels['@0.1.2'].messages.create ({
+    content: ``,
+    channel_id: event.channel_id,
+    embed: {
+      title: song.title,
+      color: 0x6868AC,
+      thumbnail: {url: song.song_art_image_url},
+      description: song.lyrics,
+    },
   });
-  await lib.discord.channels['@0.2.0'].messages.create({
-     channel_id: `${context.params.event.channel_id}`,
-     content: `Disconnected from <#${VOICE_CHANNEL}>!`,
-   })
-};
+}
