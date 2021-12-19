@@ -71,7 +71,7 @@ if (escapedContent.match(new RegExp(regexString, 'i'))) {
   
   // If there are 3 strikes, reset strike
   if (strike == 2) {
-    let strike = parseInt(strikeNote.rows[0].fields['Strike']) - parseInt(2);
+    strike = parseInt(strikeNote.rows[0].fields['Strike']) - parseInt(2);
     let guild = await lib.discord.guilds['@0.1.0'].retrieve ({
       guild_id: event.guild_id,
     });
