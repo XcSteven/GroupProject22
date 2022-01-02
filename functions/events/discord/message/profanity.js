@@ -30,14 +30,14 @@ let today_day = parseInt(date.format('D')) + parseInt(3);
 let today_month = parseInt(date.format('M'));
 
 //Calculate day and month.
-if ((today_month == [1, 3, 5, 7, 8, 10, 12]) && (today_day > 31)) {
+if ((today_month == 1 || today_month == 3 || today_month == 5 || today_month == 7 || today_month == 8 || today_month == 10 || today_month == 12) && (today_day > 31)) {
   today_month = today_month + 1;
   today_day = today_day - 31;
   if (today_month > 12){
     today_month = 1
     }
 }
-if ((today_month == [4, 6, 9, 11]) && (today_day > 30)) {
+if ((today_month == 4 || today_month == 6 || today_month == 9 || today_month == 11) && (today_day > 30)) {
   today_month = today_month + 1;
   today_day = today_day - 30;
 }
