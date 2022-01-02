@@ -1,8 +1,8 @@
 const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});
 
-await lib.discord.channels['@0.2.0'].messages.create({
+await lib.discord.channels['@0.2.0'].messages.create ({
   channel_id: `912925692121972768`,
-  content: `Welcome to our server <@${context.params.event.user.id}>!`,
+  content: `Welcome to our server <@${context.params.event.user.id}>! \nYou can **@R-Bot** to view all the commands avaiable.`,
   tts: false,
   embeds: [
     {

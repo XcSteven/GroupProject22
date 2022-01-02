@@ -17,8 +17,8 @@ module.exports = async () => {
     bounds: 'FIRST_EMPTY_ROW',
     where: [
       {
-        Month: today_month,
-        Day: today_day,
+        Event_Month: today_month,
+        Event_Day: today_day,
       },
     ],
     limit: {

@@ -46,8 +46,8 @@ await lib.discord.channels['@0.2.0'].messages.create ({
           value: `Find a random meme on the Internet using the provided keyword.`
         },
         {
-          name: `!memedit`,
-          value: `Take a random meme photo and add a caption to the photo using the provided keyword.`
+          name: `!editmeme *keyword* | *top_text* || *bottom_text*`,
+          value: `Take the meme photo with the provided keyword and add captions to the photo. \nCurrently there are 9 keywords to choose from: \n**pug, doge, boy, sad, cry, copium, laugh, sweat, clown**`
         },
         {
           name: `!play *keyword*`,
@@ -82,16 +82,16 @@ await lib.discord.channels['@0.2.0'].messages.create ({
           value: `Delete own saved note.`
         },
         {
-          name: `!addreminder *reminder_name* *reminder_month(int)* *reminder_day*`,
+          name: `!addreminder *reminder_name* *reminder_month (int)* *reminder_day*`,
           value: `Create a new reminder.`
         },
         {
-          name: `!deletereminder *reminder_name*`,
+          name: `!deletereminder *reminder name*`,
           value: `Delete the reminder with the provided name.`
         },
         {
           name: `!setstatus *keyword*`,
-          value: `Customize the Bot status with the provided keyword.`
+          value: `Customize the Bot status with the provided keyword. \nEx: If the provided keyword is *Hello*, R-Bot status will be **Playing Hello**.`
         }
       ]
     }

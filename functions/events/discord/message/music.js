@@ -6,29 +6,29 @@ let voice = '908575479064305697';
 let event = context.params.event;
 
 if (event.content.startsWith('!play')) {
-  let searchString = event.content.split(' ').slice(1).join(' ');
+  let key = event.content.split(' ').slice(1).join(' ');
   
   try {
-    let youtubeLink;             
-    if (!searchString) {
+    let ytLink;             
+    if (!key) {
       return lib.discord.channels['@0.2.0'].messages.create ({
         channel_id: event.channel_id,
-        content: `No search string provided!`,
+        content: `You forgot to add a keyword! Try again with !play *keyword*.`,
       });
     }
-    if (!searchString.includes('youtube.com')) {
-      let results = await ytSearch(searchString);
+    if (!key.includes('youtube.com')) {
+      let results = await ytSearch(key);
       if (!results?.all?.length) {
         return lib.discord.channels['@0.2.0'].messages.create ({
           channel_id: event.channel_id,
-          content: `No results found for your search string. Please try a different one.`,
+          content: `No results found for your keyword. Please try a different one.`,
         });
       }
-      youtubeLink = results.all[0].url;
+      ytLink = results.all[0].url;
     } else {
-      youtubeLink = searchString;
+      ytLink = key;
     }
-    let info = await ytdl.getInfo(youtubeLink);
+    let info = await ytdl.getInfo(ytLink);
     await lib.discord.voice['@0.0.1'].tracks.play ({
       channel_id: voice,
       guild_id: event.guild_id,
@@ -69,11 +69,7 @@ if (event.content.startsWith('!play')) {
     content: `Resumed.`,
   });
 } else if (event.content.startsWith('!lyric')) {
-  const name = event.content
-    .split(' ')
-    .slice(1)
-    .join(' ')
-    .trim();
+  const name = event.content.split(' ').slice(1).join(' ').trim();
   if (!name)
     return lib.discord.channels['@0.1.2'].messages.create ({
       channel_id: event.channel_id,
