@@ -4,7 +4,7 @@ let event = context.params.event;
 let badWordsList = [
   'ass', 'a$$', 'asshole', 'a$$hole', 'anus', 'anas', 'arse', 'arsehole',
   'bitch', 'b1tch', 'b*tch', 'bastard', 'b!tch', 'bjtch', 'bitches', 'b*tches', 'b!tches', 'bjtches',
-  'bullshit', 'bullshiet', 'bullsh1t', 'bullocks',
+  'bullshit', 'bullshiet', 'bullsh1t', 'bollocks', 'bollock',
   'blowjob', 'handjob', 'boob', 'boobs', 'b00b', 'b00bs',
   'cunt', 'c*nt', 'cum', 'cock', 'c0ck', 'c*ck', 'crap', 'cvm',
   'damn',
@@ -22,9 +22,31 @@ let badWordsList = [
   'whore', 'wh0re',
   'wtf', 'wank',
 ];
+
+//Get month and day from system.
+const momentTimezone = require('moment-timezone');
+let date = momentTimezone().tz('Asia/Ho_Chi_Minh');
+let today_day = parseInt(date.format('D')) + parseInt(3);
+let today_month = parseInt(date.format('M'));
+
+//Calculate day and month.
+if ((today_month == 1 || today_month == 3 || today_month == 5 || today_month == 7 || today_month == 8 || today_month == 10 || today_month == 12) && (today_day > 31)) {
+  today_month = today_month + 1;
+  today_day = today_day - 31;
+  if (today_month > 12){ today_month = 1 }
+}
+if ((today_month == 4 || today_month == 6 || today_month == 9 || today_month == 11) && (today_day > 30)) {
+  today_month = today_month + 1;
+  today_day = today_day - 30;
+}
+if ((today_month == 2 || today_day > 28)) {
+  today_month = 3;
+  today_day = today_day - 28;
+}  
+
 // Read from the Google Sheet
 let strikeNote = await lib.googlesheets.query['@0.3.0'].select ({
-  range: `E:G`,
+  range: `E:I`,
   bounds: 'FULL_RANGE',
   where: [
     {
@@ -70,7 +92,7 @@ if (escapedContent.match(new RegExp(regexString, 'i'))) {
   });
   
   // If there are 3 strikes, reset strike
-  if (strike == 2) {
+  if (strike == 3) {
     strike = parseInt(strikeNote.rows[0].fields['Strike']) - parseInt(2);
     let guild = await lib.discord.guilds['@0.1.0'].retrieve ({
       guild_id: event.guild_id,
@@ -101,21 +123,23 @@ if (escapedContent.match(new RegExp(regexString, 'i'))) {
     });
   };
   
-  //Add strike
+  //Add strike (Now also add month and day)
   if (strikeNote.rows.length === 0) {
     await lib.googlesheets.query['@0.3.0'].insert ({
-      range: `E:G`,
+      range: `E:I`,
       fieldsets: [
         {
           ID: event.author.id,
           Username: event.author.username,
-          Strike: `0`,
+          Strike: `1`,
+          Month: today_month,
+          Day: today_day,
         },
       ],
     });
   } else {
     await lib.googlesheets.query['@0.3.0'].update ({
-      range: `E:G`,
+      range: `E:I`,
       bounds: 'FULL_RANGE',
       where: [
         {
@@ -129,6 +153,8 @@ if (escapedContent.match(new RegExp(regexString, 'i'))) {
       fields: {
         Username: event.author.username,
         Strike: strike,
+        Month: today_month,
+        Day: today_day,
       },
     });
   };
