@@ -8,7 +8,7 @@ if (event.content.startsWith('!addnote')) {
   if (!userNote) {
     return lib.discord.channels['@0.2.0'].messages.create ({
       channel_id: event.channel_id,
-      content: `You forgot to add a keyword! Try again with !addnote *keyword*.`,
+      content: `You forgot to add the note content! Try again with !addnote *note_content*.`,
     });
   } else {
     await lib.utils.kv['@0.1.16'].set ({
@@ -32,7 +32,7 @@ if (event.content.startsWith('!addnote')) {
   } else {
     await lib.discord.channels['@0.1.1'].messages.create ({
       channel_id: event.channel_id,
-      content: `No notes found. Add one using !addnote *keyword*.`
+      content: `No notes found. Add one using !addnote *note_content*.`
     });
   }
 } else if (event.content.startsWith('!deletenote')) {

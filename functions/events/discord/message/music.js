@@ -73,7 +73,7 @@ if (event.content.startsWith('!play')) {
   if (!name)
     return lib.discord.channels['@0.1.2'].messages.create ({
       channel_id: event.channel_id,
-      content: `Please provide the song name!`,
+      content: `You forgot to add a keyword! Try again with !lyric *keyword*.`,
       message_reference: {
         message_id: event.id,
       },
