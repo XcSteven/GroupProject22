@@ -15,42 +15,59 @@ if (event.content.startsWith('!addreminder')) {
     let eventName = eventContent[0].split('_').join(' ');
     let eventMonth = eventContent[1];
     let eventDay = eventContent[2];
-    if (eventMonth > 12 || eventMonth < 1){
+    if (eventName == '') {
       await lib.discord.channels['@0.2.0'].messages.create ({
-      channel_id: event.channel_id,
-      content: `Month input is invalid. Please try again.`,
+        channel_id: event.channel_id,
+        content: `Event name not provided. Please try again.`,
       });
-    } else if ((eventMonth == 1 || eventMonth == 3 || eventMonth == 5 || eventMonth == 7 || eventMonth == 8 || eventMonth == 10 || eventMonth == 12) && (eventDay > 31 || eventDay < 1)){
-          await lib.discord.channels['@0.2.0'].messages.create ({
-          channel_id: event.channel_id,
-          content: `Day input is invalid. Please try again.`,
-          });
-    } else if ((eventMonth == 4 || eventMonth == 6 || eventMonth == 9 || eventMonth == 11) && (eventDay > 30 || eventDay < 1)){
-          await lib.discord.channels['@0.2.0'].messages.create ({
-          channel_id: event.channel_id,
-          content: `Day input is invalid. Please try again.`,
-          });
-    } else if ((eventMonth == 2) && (eventDay > 29 || eventDay < 1)){
-          await lib.discord.channels['@0.2.0'].messages.create ({
-          channel_id: event.channel_id,
-          content: `Day input is invalid. Please try again.`,
-          });
-    } else { 
-      await lib.googlesheets.query['@0.3.0'].insert ({
-        range: `A:C`,
-        fieldsets: [
-          {
-            Name: eventName,
-            Event_Month: eventMonth,
-            Event_Day: eventDay,
-          },
-        ],
+    } else if (eventMonth == null) {
+      await lib.discord.channels['@0.2.0'].messages.create ({
+        channel_id: event.channel_id,
+        content: `Month input is invalid. Please try again.`,
       });
+    } else if (eventDay == null) {
+      await lib.discord.channels['@0.2.0'].messages.create ({
+        channel_id: event.channel_id,
+        content: `Day input is invalid. Please try again.`,
+      });
+    } else {
+        if (eventMonth > 12 || eventMonth < 1) {
+          await lib.discord.channels['@0.2.0'].messages.create ({
+          channel_id: event.channel_id,
+          content: `Month input is invalid. Please try again.`,
+          });
+      } else if ((eventMonth == 1 || eventMonth == 3 || eventMonth == 5 || eventMonth == 7 || eventMonth == 8 || eventMonth == 10 || eventMonth == 12) && (eventDay > 31 || eventDay < 1)){
+            await lib.discord.channels['@0.2.0'].messages.create ({
+            channel_id: event.channel_id,
+            content: `Day input is invalid. Please try again.`,
+            });
+      } else if ((eventMonth == 4 || eventMonth == 6 || eventMonth == 9 || eventMonth == 11) && (eventDay > 30 || eventDay < 1)){
+            await lib.discord.channels['@0.2.0'].messages.create ({
+            channel_id: event.channel_id,
+            content: `Day input is invalid. Please try again.`,
+            });
+      } else if ((eventMonth == 2) && (eventDay > 29 || eventDay < 1)){
+            await lib.discord.channels['@0.2.0'].messages.create ({
+            channel_id: event.channel_id,
+            content: `Day input is invalid. Please try again.`,
+            });
+      } else { 
+        await lib.googlesheets.query['@0.3.0'].insert ({
+          range: `A:C`,
+          fieldsets: [
+            {
+              Name: eventName,
+              Event_Month: eventMonth,
+              Event_Day: eventDay,
+            },
+          ],
+        });
 
-      await lib.discord.channels['@0.2.0'].messages.create ({
-          channel_id: event.channel_id,
-          content: `<@${event.author.id}> added *${eventName}*. \nType !deletereminder *${eventName}* to cancel.`,
-      });
+        await lib.discord.channels['@0.2.0'].messages.create ({
+            channel_id: event.channel_id,
+            content: `<@${event.author.id}> added *${eventName}*. \nType !deletereminder *${eventName}* to cancel.`,
+        });
+      }
     }
   }
 }
