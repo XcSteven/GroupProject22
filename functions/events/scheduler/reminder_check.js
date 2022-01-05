@@ -5,20 +5,22 @@ module.exports = async () => {
     googlesheets: {},
     discord: {},
   };
-
+  
+  //Get time from System
   const momentTimezone = require('moment-timezone');
   let date = momentTimezone().tz('Asia/Ho_Chi_Minh');
   let today_day = date.format('D');
   let today_month = date.format('M');
   let res = result.googlesheets.selectQueryResult;
-
+  
+  //Read from Google Sheet, if match, send message to Channel.
   res = await lib.googlesheets.query['@0.3.0'].select ({
     range: `A:C`,
     bounds: 'FIRST_EMPTY_ROW',
     where: [
       {
-        Event_Month: today_month,
-        Event_Day: today_day,
+        Month: today_month,
+        Day: today_day,
       },
     ],
     limit: {
