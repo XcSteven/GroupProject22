@@ -2,6 +2,8 @@ const lib = require('lib')({token: process.env.STDLIB_SECRET_TOKEN});
 
 let event = context.params.event;
 
+// If R-Bot is mentioned, it will give out the server rules and available commands
+// The list of rules is put in an embed
 await lib.discord.channels['@0.2.0'].messages.create ({
   channel_id: event.channel_id,
   content: `Every time you mention me, I will give you the rules and all the commands I can do!`,
@@ -30,6 +32,7 @@ await lib.discord.channels['@0.2.0'].messages.create ({
   ]
 });
 
+// The list of commands is put in an embed
 await lib.discord.channels['@0.2.0'].messages.create ({
   channel_id: event.channel_id,
   content: '',
