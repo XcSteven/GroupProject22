@@ -19,8 +19,8 @@ module.exports = async () => {
     bounds: 'FIRST_EMPTY_ROW',
     where: [
       {
-        Month: today_month,
-        Day: today_day,
+        Event_Month: today_month,
+        Event_Day: today_day,
       },
     ],
     limit: {
@@ -41,7 +41,7 @@ module.exports = async () => {
     }
 
     result.discord.response = await lib.discord.channels ['@0.1.2'].messages.create ({
-      channel_id: `917985358057193554`,
+      channel_id: `921689824279277569`,
       content: `Today's event: ${names}`,
     });
   }
